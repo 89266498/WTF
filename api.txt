@@ -1,0 +1,69 @@
+import ctypes
+import os
+CUR_PATH=os.path.dirname(__file__)
+dllPath=os.path.join(CUR_PATH,"mydll.dll")
+print (dllPath)
+#mydll=ctypes.cdll.LoadLibrary(dllPath)
+#print mydll
+pDll=ctypes.WinDLL(dllPath)
+print (pDll)
+
+pResutl= pDll.sum(1,4)
+pResult2=pDll.sub(1,4)
+print (pResutl)
+print (pResult2)
+
+
+pythonnet库
+
+代码参考:
+
+#导入核心库
+
+import clr
+
+#查找DLL文件,包括引用的库
+
+clr.FindAssembly('IMVdll.dll') 
+clr.FindAssembly('iMVS-6000PlatformSDK.dll') 
+clr.FindAssembly('iMVS-6000PlatformSDKCS.dll') 
+
+#引用有函数的库,文件去掉后缀
+clr.AddReference('IMVdll')
+clr.AddReference('iMVS-6000PlatformSDKCS')
+
+#调用函数库,命名空间
+
+import IMVdll
+
+#引用类
+
+c#里面的类是public class 的可以调用的类
+
+public class CAM
+
+cam=IMVdll.CAM(())
+
+#调用函数
+
+cam.openApp(appFile)
+
+#调用变量
+
+cam.distanceID[i]=ID[i]
+
+这样的运用,是不是只有我在用,很好奇,
+————————————————
+版权声明：本文为CSDN博主「Martin1025432」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/qq_26530585/article/details/81953231
+
+import clr  # add C# suppor
+
+#clr.FindAssembly('PISDK.dll') ## 加载c#dll文件
+clr.AddReference('PISDK')
+
+from PISDK import *
+
+svr = PISDK.Server
+
+print(svr)
