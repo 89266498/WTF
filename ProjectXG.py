@@ -2,22 +2,23 @@ from inhere import myproject
 import re
 
 
-info ={'Cid':'2019173067',
-'Cname':'广东华电韶关热电环保',
-'Ccompany':'广东华电韶关热电有限公司',
-'Caddress':'广东省韶关南雄市珠玑工业园',
-'Cperson':'潘贵民',
-'Cphone':'15733228728',
+info ={'Cid':'2018173106',
+'Cname':'深圳坪山环保信息化平台项目',
+'Ccompany':'华电国际电力股份有限公司深圳公司',
+'Caddress':'深圳市坪山区坑梓街道青松路2号',
+'Cperson':'张鑫',
+'Cphone':'18126232023',
        }
 
 
 
 path = r"C:\Users\gao\Desktop\环保\projects"
 name = "2019173067广东华电韶关热电有限公司环保信息化平台合同"
-filename = "韶关热电"
+filename = "深圳坪山"
 
 a1 = myproject(path)
-a1.makepro('闵行能源')
+a1.makepro('深圳坪山')
+a1.makefy(info)
 
 
 
