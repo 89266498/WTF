@@ -34,22 +34,30 @@ def getallconfig(unit):
         getxlsxfordb(os.path.join(unit, key + '.csv'), cmd)
 
 
-def columnsfilter(cols, filtercols=None):
-    colstr = ""
-    for col in cols:
-        if filtercols is None or col not in filtercols:
-            colstr += "{0},".format(col)
-    colstr = colstr.rstrip(',')
-    return colstr
+# def columnsfilter(cols, filtercols=None):
+#     colstr = ""
+#     for col in cols:
+#         if filtercols is None or col not in filtercols:
+#             colstr += "{0},".format(col)
+#     colstr = colstr.rstrip(',')
+#     return colstr
 
 
-def rowsfilter(row, filtercols=None):
-    vals = ""
-    for key, value in row.items():
-        if filtercols is None or key not in filtercols:
-            vals += "'{0}',".format(value)
-    vals = vals.rstrip(',')
-    return vals
+# def rowsfilter(row, filtercols=None):
+#     vals = ""
+#     for key, value in row.items():
+#         if filtercols is None or key not in filtercols:
+#             vals += "'{0}',".format(value)
+#     vals = vals.rstrip(',')
+#     return vals
+
+def list_dir(path, list_name):  # 传入存储的list
+    for file in os.listdir(path):  # os.listdir(path)，路径下的文件及文件夹，不包含子文件和子文件夹
+        file_path = os.path.join(path, file)
+        if os.path.isdir(file_path):  # 判断是否目录
+            list_dir(file_path, list_name)
+        else:
+            list_name.append(file_path)
 
 
 def get_filePath_fileName_fileExt(fileUrl):
@@ -58,19 +66,30 @@ def get_filePath_fileName_fileExt(fileUrl):
     return filepath, shotname, extension
 
 
+def colsvals(dict):
+    cols = ""
+    vals = ""
+    for key, value in dict.items():
+        if not pd.isna(value):
+            cols += "{0},".format(key)
+            vals += "'{0}',".format(value)
+    vals = vals.rstrip(',')
+    cols = cols.rstrip(',')
+    return cols, vals
+
+
 def getsqlfromxlsx(filename, sqlfile, filtercols=None):
     df = pd.read_csv(filename, encoding='gbk')
-    df = df.dropna(axis=1, how='any')
+    if filtercols is not None and filtercols in df.columns.values:
+        df = df.drop(filtercols, axis=1)
     ret = ""
     ph, tablename, ext = get_filePath_fileName_fileExt(filename)
-    print(tablename)
-
     sqlc = r"INSERT INTO {0} ({1}) VALUES ({2});"
-    colstr = columnsfilter(df.columns.values, filtercols)
 
     for index, row in df.iterrows():
-        val = rowsfilter(row, filtercols)
-        sqlt = sqlc.format(tablename, colstr, val)
+        dic = row.to_dict()
+        cols, vals = colsvals(dic)
+        sqlt = sqlc.format(tablename, cols, vals)
         ret += sqlt + "\n"
     with open(sqlfile, 'w+') as fp:
         fp.write(ret)
@@ -146,8 +165,21 @@ def repunit(source, dest):
         print(df)
 
 
-# repunit('BRPC01', 'BRPC03')
-getsqlfromxlsx(r"e:\T_BASE_STAT_PARA4.csv", r"e:\123.sql")
+def getsqlfiles(file_dir):
+    for root, dirs, files in os.walk(file_dir):
+        for file in files:
+            fileurl = os.path.join(root, file)
+
+            filepath, shotname, extension = get_filePath_fileName_fileExt(fileurl)
+            print(extension)
+            if extension.lower() == '.csv':
+                getsqlfromxlsx(fileurl, os.path.join(filepath, shotname) + '.sql', ['id_key'])
+
+
+# repunit(r'XZFB01', r'XZFB03')
+# getsqlfromxlsx(r"e:\T_BASE_WATCHPARA_CX3.csv", r"e:\3.sql",['id_key'])
+
+getsqlfiles(r'C:\Users\gao\Desktop\环保\projects\通州北燃\BRPC03')
 
 # if __name__ == '__main__':
 #

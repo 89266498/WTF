@@ -1,0 +1,3 @@
+id_key,t_watchid,t_watchdesc,t_type,t_formula,t_formulapara,i_count,t_orgid,t_calctype,i_level,t_formulacount,up,down
+3058,XZFB01.SSFH,上海闵行#1机组实时负荷,RT,XZFB:1:00CE30001,XZFB:1:00CE30001,0.0,XZFB01,0,1,,1000000000.0,-100.0
+3059,XZFB01.STOP,上海闵行#1机组主机退出运行,STAT,XZFB01.SSFH<1,XZFB01.SSFH,10.0,XZFB01,0,2,,,
