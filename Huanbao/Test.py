@@ -144,24 +144,24 @@ def getdcunit(unit):
     return info
 
 
-def repunit(source, dest):
+def repunit(file_dir, source, dest):
     sourceinfo = getdcunit(source)
     destinfo = getdcunit(dest)
 
     filenames = []
-    if os.path.exists(source):
-        for root, dirs, files in os.walk(source):
+    if os.path.exists(os.path.join(file_dir, source)):
+        for root, dirs, files in os.walk(os.path.join(file_dir, source)):
             for file in files:
                 filenames.append(os.path.join(root, file))
-    if not os.path.exists(dest):
-        os.makedirs(dest)
+    if not os.path.exists(os.path.join(file_dir, dest)):
+        os.makedirs(os.path.join(file_dir, dest))
     print(filenames)
     for str in filenames:
         df = pd.read_csv(str)
         df.replace(source, dest, inplace=True, regex=True)
         df.replace('{0}:{1}'.format(sourceinfo['dc'], sourceinfo['jz']),
                    '{0}:{1}'.format(destinfo['dc'], destinfo['jz']), inplace=True, regex=True)
-        df.to_csv(str.replace(source, dest), index=False)
+        df.to_csv(os.path.join(file_dir, str.replace(source, dest)), index=False)
         print(df)
 
 
@@ -177,9 +177,11 @@ def getsqlfiles(file_dir):
 
 
 # repunit(r'XZFB01', r'XZFB03')
-# getsqlfromxlsx(r"e:\T_BASE_WATCHPARA_CX3.csv", r"e:\3.sql",['id_key'])
+getsqlfromxlsx(r"e:\YD\cp1111.csv", r"e:\YD\34.sql", ['ID_KEY'])
 
-getsqlfiles(r'C:\Users\gao\Desktop\环保\projects\通州北燃\BRPC03')
+# getsqlfiles(r'C:\Users\gao\Desktop\环保\projects\通州北燃\BRPC03')
+# repunit(r'E:\YD','NJRJ01','NJRJ11')
+
 
 # if __name__ == '__main__':
 #
